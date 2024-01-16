@@ -1,0 +1,944 @@
+[gd_scene load_steps=34 format=2]
+
+[ext_resource path="res://rsrc/symbol_fonts_dynamic.tres" type="DynamicFont" id=1]
+[ext_resource path="res://rsrc/theme.tres" type="Theme" id=2]
+[ext_resource path="res://rsrc/bgroup_file.tres" type="ButtonGroup" id=3]
+[ext_resource path="res://rsrc/bgroup_help.tres" type="ButtonGroup" id=4]
+[ext_resource path="res://rsrc/bgroup_tools.tres" type="ButtonGroup" id=5]
+[ext_resource path="res://rsrc/bgroup_edit.tres" type="ButtonGroup" id=6]
+[ext_resource path="res://src/app.gd" type="Script" id=7]
+[ext_resource path="res://src/tool_options/options_spring.gd" type="Script" id=8]
+[ext_resource path="res://src/canvas.gd" type="Script" id=9]
+[ext_resource path="res://src/grid.gd" type="Script" id=10]
+[ext_resource path="res://src/undoredo_manager.gd" type="Script" id=11]
+[ext_resource path="res://src/guides.gd" type="Script" id=12]
+[ext_resource path="res://src/tool_options/options_particle.gd" type="Script" id=13]
+[ext_resource path="res://src/tool_options/options_selected_particles.gd" type="Script" id=14]
+[ext_resource path="res://src/custom_gui_elements/float_box.gd" type="Script" id=15]
+[ext_resource path="res://src/tool_options/options_rotation.gd" type="Script" id=16]
+[ext_resource path="res://src/tool_options/options_position.gd" type="Script" id=17]
+[ext_resource path="res://src/actions.gd" type="Script" id=18]
+[ext_resource path="res://src/topbar.gd" type="Script" id=19]
+[ext_resource path="res://src/tool_options/options_polygon.gd" type="Script" id=20]
+[ext_resource path="res://src/dialogs/grid_settings_dialog.gd" type="Script" id=21]
+[ext_resource path="res://src/dialogs/image_settings_dialog.gd" type="Script" id=22]
+[ext_resource path="res://src/dialogs/save_file_dialog.gd" type="Script" id=23]
+[ext_resource path="res://src/dialogs/open_file_dialog.gd" type="Script" id=24]
+
+[sub_resource type="InputEventAction" id=8]
+action = "ui_zoom_out"
+
+[sub_resource type="ShortCut" id=9]
+shortcut = SubResource( 8 )
+
+[sub_resource type="InputEventAction" id=10]
+action = "ui_zoom_in"
+
+[sub_resource type="ShortCut" id=11]
+shortcut = SubResource( 10 )
+
+[sub_resource type="InputEventKey" id=7]
+
+[sub_resource type="ShortCut" id=6]
+shortcut = SubResource( 7 )
+
+[sub_resource type="StyleBoxEmpty" id=3]
+content_margin_right = 2.0
+
+[sub_resource type="StyleBoxFlat" id=4]
+content_margin_right = 2.0
+bg_color = Color( 0.207843, 0.207843, 0.207843, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id=2]
+content_margin_left = 8.0
+content_margin_right = 8.0
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color( 0.137255, 0.137255, 0.137255, 1 )
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="app" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource( 7 )
+tool_button_group = ExtResource( 5 )
+
+[node name="undoredo_manager" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource( 11 )
+
+[node name="actions" type="Node" parent="."]
+script = ExtResource( 18 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ZoomContainer" type="HBoxContainer" parent="CanvasLayer"]
+margin_left = 72.0
+margin_top = 73.0
+margin_right = 176.0
+margin_bottom = 98.0
+rect_min_size = Vector2( 110, 0 )
+alignment = 1
+
+[node name="btn_zoom_out" type="Button" parent="CanvasLayer/ZoomContainer"]
+margin_right = 22.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 22, 22 )
+hint_tooltip = "Zoom Out"
+focus_mode = 0
+theme = ExtResource( 2 )
+shortcut = SubResource( 9 )
+text = ""
+align = 0
+icon_align = 1
+
+[node name="Container" type="Container" parent="CanvasLayer/ZoomContainer"]
+margin_left = 26.0
+margin_right = 29.0
+margin_bottom = 25.0
+size_flags_horizontal = 3
+
+[node name="btn_reset_zoom" type="Button" parent="CanvasLayer/ZoomContainer"]
+margin_left = 33.0
+margin_right = 77.0
+margin_bottom = 25.0
+hint_tooltip = "Zoom Reset"
+focus_mode = 0
+theme = ExtResource( 2 )
+text = "100%"
+
+[node name="Container2" type="Container" parent="CanvasLayer/ZoomContainer"]
+margin_left = 81.0
+margin_right = 84.0
+margin_bottom = 25.0
+size_flags_horizontal = 3
+
+[node name="btn_zoom_in" type="Button" parent="CanvasLayer/ZoomContainer"]
+margin_left = 88.0
+margin_right = 110.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 22, 22 )
+hint_tooltip = "Zoom In"
+focus_mode = 0
+theme = ExtResource( 2 )
+shortcut = SubResource( 11 )
+text = ""
+align = 0
+icon_align = 1
+
+[node name="gui" type="VBoxContainer" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="topbar" type="PanelContainer" parent="CanvasLayer/gui"]
+margin_right = 1024.0
+margin_bottom = 49.0
+theme = ExtResource( 2 )
+script = ExtResource( 19 )
+
+[node name="container" type="HBoxContainer" parent="CanvasLayer/gui/topbar"]
+margin_left = 12.0
+margin_top = 12.0
+margin_right = 1012.0
+margin_bottom = 37.0
+
+[node name="btn_file" type="MenuButton" parent="CanvasLayer/gui/topbar/container"]
+margin_right = 44.0
+margin_bottom = 25.0
+theme = ExtResource( 2 )
+enabled_focus_mode = 0
+shortcut = SubResource( 6 )
+group = ExtResource( 3 )
+text = "File"
+
+[node name="btn_edit" type="MenuButton" parent="CanvasLayer/gui/topbar/container"]
+margin_left = 56.0
+margin_right = 100.0
+margin_bottom = 25.0
+theme = ExtResource( 2 )
+enabled_focus_mode = 0
+group = ExtResource( 6 )
+text = "Edit"
+
+[node name="btn_view" type="MenuButton" parent="CanvasLayer/gui/topbar/container"]
+margin_left = 112.0
+margin_right = 156.0
+margin_bottom = 25.0
+theme = ExtResource( 2 )
+enabled_focus_mode = 0
+group = ExtResource( 6 )
+text = "View"
+
+[node name="btn_help" type="MenuButton" parent="CanvasLayer/gui/topbar/container"]
+margin_left = 168.0
+margin_right = 212.0
+margin_bottom = 25.0
+theme = ExtResource( 2 )
+enabled_focus_mode = 0
+group = ExtResource( 4 )
+text = "Help"
+
+[node name="middle_side" type="HBoxContainer" parent="CanvasLayer/gui"]
+margin_top = 53.0
+margin_right = 1024.0
+margin_bottom = 600.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="middle_left" type="HSplitContainer" parent="CanvasLayer/gui/middle_side"]
+margin_right = 48.0
+margin_bottom = 547.0
+collapsed = true
+
+[node name="toolbar" type="PanelContainer" parent="CanvasLayer/gui/middle_side/middle_left"]
+margin_right = 48.0
+margin_bottom = 547.0
+rect_min_size = Vector2( 32, 0 )
+size_flags_horizontal = 0
+size_flags_vertical = 3
+theme = ExtResource( 2 )
+
+[node name="container" type="VBoxContainer" parent="CanvasLayer/gui/middle_side/middle_left/toolbar"]
+margin_left = 12.0
+margin_top = 12.0
+margin_right = 36.0
+margin_bottom = 535.0
+
+[node name="tool_select" type="Button" parent="CanvasLayer/gui/middle_side/middle_left/toolbar/container"]
+unique_name_in_owner = true
+margin_right = 24.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 24, 24 )
+hint_tooltip = "Select and edit particles"
+focus_mode = 0
+theme = ExtResource( 2 )
+custom_fonts/font = ExtResource( 1 )
+toggle_mode = true
+pressed = true
+group = ExtResource( 5 )
+text = "󰆿"
+icon_align = 1
+
+[node name="tool_particle" type="Button" parent="CanvasLayer/gui/middle_side/middle_left/toolbar/container"]
+unique_name_in_owner = true
+margin_top = 37.0
+margin_right = 24.0
+margin_bottom = 62.0
+rect_min_size = Vector2( 24, 24 )
+hint_tooltip = "Create and remove particles"
+focus_mode = 0
+theme = ExtResource( 2 )
+custom_fonts/font = ExtResource( 1 )
+toggle_mode = true
+group = ExtResource( 5 )
+text = ""
+icon_align = 1
+
+[node name="tool_spring" type="Button" parent="CanvasLayer/gui/middle_side/middle_left/toolbar/container"]
+unique_name_in_owner = true
+margin_top = 74.0
+margin_right = 24.0
+margin_bottom = 99.0
+rect_min_size = Vector2( 24, 24 )
+hint_tooltip = "Create and remove springs"
+focus_mode = 0
+theme = ExtResource( 2 )
+custom_fonts/font = ExtResource( 1 )
+toggle_mode = true
+group = ExtResource( 5 )
+text = "󱔔"
+icon_align = 1
+
+[node name="tool_polygon" type="Button" parent="CanvasLayer/gui/middle_side/middle_left/toolbar/container"]
+unique_name_in_owner = true
+margin_top = 111.0
+margin_right = 24.0
+margin_bottom = 136.0
+rect_min_size = Vector2( 24, 24 )
+hint_tooltip = "Create and remove polygons "
+focus_mode = 0
+theme = ExtResource( 2 )
+custom_fonts/font = ExtResource( 1 )
+toggle_mode = true
+group = ExtResource( 5 )
+text = "󰙞"
+icon_align = 1
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/gui/middle_side/middle_left/toolbar/container"]
+margin_top = 148.0
+margin_right = 24.0
+margin_bottom = 152.0
+theme = ExtResource( 2 )
+
+[node name="tool_position" type="Button" parent="CanvasLayer/gui/middle_side/middle_left/toolbar/container"]
+unique_name_in_owner = true
+margin_top = 164.0
+margin_right = 24.0
+margin_bottom = 188.0
+rect_min_size = Vector2( 24, 24 )
+hint_tooltip = "Edit position of the mesh"
+focus_mode = 0
+theme = ExtResource( 2 )
+custom_fonts/font = ExtResource( 1 )
+custom_styles/hover = SubResource( 3 )
+custom_styles/pressed = SubResource( 4 )
+custom_styles/focus = SubResource( 3 )
+custom_styles/disabled = SubResource( 3 )
+custom_styles/normal = SubResource( 3 )
+toggle_mode = true
+group = ExtResource( 5 )
+text = "󰆾"
+icon_align = 1
+
+[node name="tool_rotation" type="Button" parent="CanvasLayer/gui/middle_side/middle_left/toolbar/container"]
+unique_name_in_owner = true
+margin_top = 200.0
+margin_right = 24.0
+margin_bottom = 225.0
+rect_min_size = Vector2( 24, 24 )
+hint_tooltip = "Edit rotation of the mesh"
+focus_mode = 0
+theme = ExtResource( 2 )
+custom_fonts/font = ExtResource( 1 )
+toggle_mode = true
+group = ExtResource( 5 )
+text = "󰑥"
+icon_align = 1
+
+[node name="middle_right" type="HSplitContainer" parent="CanvasLayer/gui/middle_side"]
+margin_left = 52.0
+margin_right = 1024.0
+margin_bottom = 547.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+split_offset = 500
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/gui/middle_side/middle_right"]
+margin_right = 677.0
+margin_bottom = 547.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="right_bar" type="PanelContainer" parent="CanvasLayer/gui/middle_side/middle_right"]
+margin_left = 689.0
+margin_right = 972.0
+margin_bottom = 547.0
+mouse_filter = 2
+size_flags_vertical = 3
+theme = ExtResource( 2 )
+
+[node name="split" type="VSplitContainer" parent="CanvasLayer/gui/middle_side/middle_right/right_bar"]
+margin_left = 12.0
+margin_top = 12.0
+margin_right = 271.0
+margin_bottom = 535.0
+theme = ExtResource( 2 )
+split_offset = -100
+
+[node name="tool_options_tab" type="PanelContainer" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split"]
+margin_right = 259.0
+margin_bottom = 155.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 2 )
+
+[node name="tool_options" type="VBoxContainer" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab"]
+margin_left = 12.0
+margin_top = 12.0
+margin_right = 247.0
+margin_bottom = 143.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 2 )
+custom_constants/separation = 16
+
+[node name="panel_title" type="Label" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options"]
+margin_right = 235.0
+margin_bottom = 33.0
+theme = ExtResource( 2 )
+custom_styles/normal = SubResource( 2 )
+text = "  Tool Options"
+align = 1
+
+[node name="options_selected_particles" type="GridContainer" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options"]
+unique_name_in_owner = true
+visible = false
+margin_top = 49.0
+margin_right = 361.0
+margin_bottom = 148.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 3
+script = ExtResource( 14 )
+
+[node name="position" type="Label" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_selected_particles"]
+margin_top = 4.0
+margin_right = 89.0
+margin_bottom = 29.0
+size_flags_horizontal = 3
+theme = ExtResource( 2 )
+text = "Position:"
+
+[node name="value_pos_x" type="LineEdit" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_selected_particles"]
+margin_left = 93.0
+margin_right = 233.0
+margin_bottom = 33.0
+placeholder_text = "x"
+script = ExtResource( 15 )
+
+[node name="value_pos_y" type="LineEdit" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_selected_particles"]
+margin_left = 237.0
+margin_right = 361.0
+margin_bottom = 33.0
+size_flags_horizontal = 3
+theme = ExtResource( 2 )
+placeholder_text = "y"
+script = ExtResource( 15 )
+
+[node name="radius" type="Label" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_selected_particles"]
+margin_top = 41.0
+margin_right = 89.0
+margin_bottom = 66.0
+theme = ExtResource( 2 )
+text = "Radius:"
+
+[node name="value_radius" type="SpinBox" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_selected_particles"]
+margin_left = 93.0
+margin_top = 37.0
+margin_right = 233.0
+margin_bottom = 70.0
+min_value = 0.5
+max_value = 100000.0
+step = 0.1
+value = 0.5
+
+[node name="empty" type="Label" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_selected_particles"]
+margin_left = 237.0
+margin_top = 41.0
+margin_right = 361.0
+margin_bottom = 66.0
+theme = ExtResource( 2 )
+
+[node name="is_internal" type="Label" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_selected_particles"]
+margin_top = 74.0
+margin_right = 89.0
+margin_bottom = 99.0
+theme = ExtResource( 2 )
+text = "Internal:"
+
+[node name="value_enable_internal" type="CheckBox" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_selected_particles"]
+margin_left = 93.0
+margin_top = 74.0
+margin_right = 233.0
+margin_bottom = 99.0
+theme = ExtResource( 2 )
+
+[node name="options_particle" type="GridContainer" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options"]
+unique_name_in_owner = true
+visible = false
+margin_top = 49.0
+margin_right = 233.0
+margin_bottom = 131.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 2
+script = ExtResource( 13 )
+
+[node name="radius" type="Label" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_particle"]
+margin_top = 4.0
+margin_right = 89.0
+margin_bottom = 29.0
+theme = ExtResource( 2 )
+text = "Radius:"
+
+[node name="value_radius" type="SpinBox" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_particle"]
+margin_left = 93.0
+margin_right = 233.0
+margin_bottom = 33.0
+
+[node name="is_internal" type="Label" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_particle"]
+margin_top = 37.0
+margin_right = 89.0
+margin_bottom = 62.0
+theme = ExtResource( 2 )
+text = "Internal:"
+
+[node name="value_enable_internal" type="CheckBox" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_particle"]
+margin_left = 93.0
+margin_top = 37.0
+margin_right = 233.0
+margin_bottom = 62.0
+theme = ExtResource( 2 )
+
+[node name="options_polygon" type="GridContainer" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options"]
+unique_name_in_owner = true
+visible = false
+margin_top = 49.0
+margin_right = 235.0
+margin_bottom = 82.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 2
+script = ExtResource( 20 )
+
+[node name="Button" type="Button" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_polygon"]
+margin_right = 152.0
+margin_bottom = 25.0
+text = " Remove Polygon"
+
+[node name="options_spring" type="GridContainer" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options"]
+unique_name_in_owner = true
+visible = false
+margin_top = 49.0
+margin_right = 227.0
+margin_bottom = 131.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 2
+script = ExtResource( 8 )
+
+[node name="is_internal" type="Label" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_spring"]
+margin_right = 89.0
+margin_bottom = 25.0
+theme = ExtResource( 2 )
+text = "Internal:"
+
+[node name="value_enable_internal" type="CheckBox" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_spring"]
+margin_left = 93.0
+margin_right = 117.0
+margin_bottom = 25.0
+theme = ExtResource( 2 )
+
+[node name="options_position" type="GridContainer" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options"]
+unique_name_in_owner = true
+visible = false
+margin_top = 49.0
+margin_right = 274.0
+margin_bottom = 111.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 3
+script = ExtResource( 17 )
+
+[node name="position" type="Label" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_position"]
+margin_right = 134.0
+margin_bottom = 25.0
+size_flags_horizontal = 3
+theme = ExtResource( 2 )
+text = "Mesh Position:"
+
+[node name="position2" type="Label" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_position"]
+margin_left = 138.0
+margin_right = 262.0
+margin_bottom = 25.0
+size_flags_horizontal = 3
+theme = ExtResource( 2 )
+
+[node name="position3" type="Label" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_position"]
+margin_left = 266.0
+margin_right = 274.0
+margin_bottom = 25.0
+size_flags_horizontal = 3
+theme = ExtResource( 2 )
+
+[node name="value_pos_x" type="LineEdit" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_position"]
+margin_top = 29.0
+margin_right = 134.0
+margin_bottom = 62.0
+text = "0"
+placeholder_text = "x"
+script = ExtResource( 15 )
+
+[node name="value_pos_y" type="LineEdit" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_position"]
+margin_left = 138.0
+margin_top = 29.0
+margin_right = 262.0
+margin_bottom = 62.0
+size_flags_horizontal = 3
+theme = ExtResource( 2 )
+text = "0"
+placeholder_text = "y"
+script = ExtResource( 15 )
+
+[node name="options_rotation" type="GridContainer" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options"]
+unique_name_in_owner = true
+visible = false
+margin_top = 49.0
+margin_right = 269.0
+margin_bottom = 82.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 2
+script = ExtResource( 16 )
+
+[node name="mesh_rotation" type="Label" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_rotation"]
+margin_top = 4.0
+margin_right = 125.0
+margin_bottom = 29.0
+theme = ExtResource( 2 )
+text = "Mesh Rotation"
+
+[node name="value_rotation" type="LineEdit" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_rotation"]
+margin_left = 129.0
+margin_right = 269.0
+margin_bottom = 33.0
+script = ExtResource( 15 )
+
+[node name="options_none" type="GridContainer" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options"]
+unique_name_in_owner = true
+margin_top = 49.0
+margin_right = 235.0
+margin_bottom = 131.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/tool_options_tab/tool_options/options_none"]
+margin_right = 98.0
+margin_bottom = 25.0
+theme = ExtResource( 2 )
+text = "No Options"
+
+[node name="meshes_bar" type="PanelContainer" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split"]
+margin_top = 167.0
+margin_right = 259.0
+margin_bottom = 523.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 2 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/meshes_bar"]
+margin_left = 12.0
+margin_top = 12.0
+margin_right = 247.0
+margin_bottom = 344.0
+custom_constants/separation = 16
+
+[node name="panel_title" type="Label" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/meshes_bar/VBoxContainer"]
+margin_right = 235.0
+margin_bottom = 33.0
+theme = ExtResource( 2 )
+custom_styles/normal = SubResource( 2 )
+text = "  Meshes"
+align = 1
+
+[node name="mesh_tree_bar" type="Tree" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/meshes_bar/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 49.0
+margin_right = 235.0
+margin_bottom = 291.0
+rect_min_size = Vector2( 128, 128 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 2 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/meshes_bar/VBoxContainer"]
+margin_top = 307.0
+margin_right = 235.0
+margin_bottom = 332.0
+
+[node name="btn_add_mesh" type="Button" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/meshes_bar/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+margin_right = 98.0
+margin_bottom = 25.0
+custom_fonts/font = ExtResource( 1 )
+text = " Add Mesh"
+
+[node name="btn_remove_mesh" type="Button" parent="CanvasLayer/gui/middle_side/middle_right/right_bar/split/meshes_bar/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+margin_left = 110.0
+margin_right = 235.0
+margin_bottom = 25.0
+custom_fonts/font = ExtResource( 1 )
+text = " Remove Mesh"
+
+[node name="open_file_dialog" type="FileDialog" parent="CanvasLayer"]
+unique_name_in_owner = true
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -284.0
+margin_top = -171.5
+margin_right = 284.0
+margin_bottom = 171.5
+theme = ExtResource( 2 )
+popup_exclusive = true
+window_title = "Open a File"
+resizable = true
+mode = 0
+access = 2
+filters = PoolStringArray( "*.qmesh; QMesh Files" )
+script = ExtResource( 24 )
+
+[node name="save_file_dialog" type="FileDialog" parent="CanvasLayer"]
+unique_name_in_owner = true
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -284.0
+margin_top = -171.5
+margin_right = 284.0
+margin_bottom = 171.5
+theme = ExtResource( 2 )
+popup_exclusive = true
+window_title = "Save File"
+resizable = true
+access = 2
+filters = PoolStringArray( "*.qmesh; QMesh Files" )
+script = ExtResource( 23 )
+
+[node name="grid_settings_dialog" type="ConfirmationDialog" parent="CanvasLayer"]
+unique_name_in_owner = true
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -218.5
+margin_top = -73.5
+margin_right = 218.5
+margin_bottom = 73.5
+theme = ExtResource( 2 )
+popup_exclusive = true
+window_title = "Grid Settings"
+script = ExtResource( 21 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/grid_settings_dialog"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -41.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/grid_settings_dialog/VBoxContainer"]
+margin_right = 421.0
+margin_bottom = 98.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Label" type="Label" parent="CanvasLayer/grid_settings_dialog/VBoxContainer/HBoxContainer"]
+margin_left = 9.0
+margin_top = 36.0
+margin_right = 107.0
+margin_bottom = 61.0
+text = "Grid Size:"
+
+[node name="value_size_x" type="SpinBox" parent="CanvasLayer/grid_settings_dialog/VBoxContainer/HBoxContainer"]
+margin_left = 119.0
+margin_top = 32.0
+margin_right = 259.0
+margin_bottom = 65.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+min_value = 1.0
+max_value = 100000.0
+value = 1.0
+prefix = "x"
+
+[node name="value_size_y" type="SpinBox" parent="CanvasLayer/grid_settings_dialog/VBoxContainer/HBoxContainer"]
+margin_left = 271.0
+margin_top = 32.0
+margin_right = 411.0
+margin_bottom = 65.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+min_value = 1.0
+max_value = 100000.0
+value = 1.0
+prefix = "y"
+
+[node name="image_settings_dialog" type="AcceptDialog" parent="CanvasLayer"]
+unique_name_in_owner = true
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -286.0
+margin_top = -116.0
+margin_right = 232.0
+margin_bottom = 72.0
+theme = ExtResource( 2 )
+popup_exclusive = true
+window_title = "Reference Image Settings"
+script = ExtResource( 22 )
+
+[node name="VBoxContainer" type="GridContainer" parent="CanvasLayer/image_settings_dialog"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -41.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 2 )
+columns = 3
+
+[node name="Label2" type="Label" parent="CanvasLayer/image_settings_dialog/VBoxContainer"]
+margin_top = 4.0
+margin_right = 160.0
+margin_bottom = 29.0
+size_flags_horizontal = 3
+text = "Image File"
+
+[node name="LineEdit" type="LineEdit" parent="CanvasLayer/image_settings_dialog/VBoxContainer"]
+margin_left = 172.0
+margin_right = 331.0
+margin_bottom = 33.0
+size_flags_horizontal = 3
+size_flags_vertical = 5
+editable = false
+
+[node name="btn_load" type="Button" parent="CanvasLayer/image_settings_dialog/VBoxContainer"]
+margin_left = 343.0
+margin_right = 502.0
+margin_bottom = 33.0
+text = "Load "
+
+[node name="Label" type="Label" parent="CanvasLayer/image_settings_dialog/VBoxContainer"]
+margin_top = 49.0
+margin_right = 160.0
+margin_bottom = 74.0
+size_flags_horizontal = 3
+text = "Position"
+
+[node name="value_pos_x" type="SpinBox" parent="CanvasLayer/image_settings_dialog/VBoxContainer"]
+margin_left = 181.0
+margin_top = 45.0
+margin_right = 321.0
+margin_bottom = 78.0
+size_flags_horizontal = 6
+size_flags_vertical = 4
+min_value = -100000.0
+max_value = 100000.0
+prefix = "x"
+
+[node name="value_pos_y" type="SpinBox" parent="CanvasLayer/image_settings_dialog/VBoxContainer"]
+margin_left = 352.0
+margin_top = 45.0
+margin_right = 492.0
+margin_bottom = 78.0
+size_flags_horizontal = 6
+size_flags_vertical = 4
+min_value = -100000.0
+max_value = 100000.0
+prefix = "y"
+
+[node name="Label3" type="Label" parent="CanvasLayer/image_settings_dialog/VBoxContainer"]
+margin_top = 94.0
+margin_right = 160.0
+margin_bottom = 119.0
+size_flags_horizontal = 3
+text = "Opacity"
+
+[node name="value_opacity" type="SpinBox" parent="CanvasLayer/image_settings_dialog/VBoxContainer"]
+margin_left = 181.0
+margin_top = 90.0
+margin_right = 321.0
+margin_bottom = 123.0
+size_flags_horizontal = 6
+size_flags_vertical = 4
+step = 10.0
+value = 100.0
+exp_edit = true
+prefix = "%"
+
+[node name="Label4" type="Label" parent="CanvasLayer/image_settings_dialog/VBoxContainer"]
+margin_left = 343.0
+margin_top = 94.0
+margin_right = 502.0
+margin_bottom = 119.0
+size_flags_horizontal = 3
+
+[node name="load_image_dialog" type="FileDialog" parent="CanvasLayer"]
+unique_name_in_owner = true
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -284.0
+margin_top = -171.5
+margin_right = 284.0
+margin_bottom = 171.5
+theme = ExtResource( 2 )
+popup_exclusive = true
+window_title = "Open a File"
+resizable = true
+mode = 0
+access = 2
+filters = PoolStringArray( "*.png", "*.jpg", "*.jpeg" )
+
+[node name="about_dialog" type="AcceptDialog" parent="CanvasLayer"]
+unique_name_in_owner = true
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -286.0
+margin_top = -116.0
+margin_right = 195.0
+margin_bottom = 33.0
+theme = ExtResource( 2 )
+popup_exclusive = true
+window_title = "About QMesh Editor v0.9"
+
+[node name="Container" type="VBoxContainer" parent="CanvasLayer/about_dialog"]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 473.0
+margin_bottom = 108.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 2 )
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/about_dialog/Container"]
+margin_right = 465.0
+margin_bottom = 100.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 2 )
+bbcode_enabled = true
+bbcode_text = "The QMesh Editor tool is developed by Eray Zesen under the MIT licence.(2023)
+[url]www.github.com/erayzesen/QMeshEditor[/url]
+"
+text = "The QMesh Editor tool is developed by Eray Zesen under the MIT licence.(2023)
+www.github.com/erayzesen/QMeshEditor
+"
+
+[node name="grid" type="Node2D" parent="."]
+script = ExtResource( 10 )
+grid_color = Color( 0.121569, 0.121569, 0.121569, 1 )
+
+[node name="canvas" type="Node2D" parent="."]
+unique_name_in_owner = true
+script = ExtResource( 9 )
+
+[node name="reference_image" type="Sprite" parent="canvas"]
+unique_name_in_owner = true
+modulate = Color( 1, 1, 1, 0.117647 )
+
+[node name="guides" type="Node2D" parent="canvas"]
+script = ExtResource( 12 )
+
+[node name="meshes" type="Node2D" parent="canvas"]
+unique_name_in_owner = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+unique_name_in_owner = true
+current = true
